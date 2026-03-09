@@ -1,0 +1,43 @@
+/*
+"Aim: Identifying the most important skills required for high-paying data analyst jobs."
+
+
+*/
+
+WITH top_paying_jobs AS (
+    SELECT 
+        job_id,
+        job_title,
+        salary_year_avg,
+        name as company_name
+    FROM
+        job_postings_fact
+    LEFT JOIN company_dim 
+    USING(company_id)
+    WHERE
+        job_title_short = 'Data Analyst' AND
+        job_location = 'Anywhere' AND
+        salary_year_avg IS NOT NULL
+    ORDER BY salary_year_avg DESC
+    LIMIT 10
+)
+
+SELECT 
+    top_paying_jobs.*,
+    skills
+FROM top_paying_jobs
+INNER JOIN skills_job_dim USING(job_id)
+INNER JOIN skills_dim USING(skill_id)
+ORDER BY salary_year_avg DESC
+
+/*
+Key Takeaways
+
+SQL + Python + Tableau is the strongest skill combination.
+
+Cloud data platforms (Snowflake, Azure, AWS) are becoming important.
+
+High-paying analysts often need engineering collaboration tools (Git, Jira).
+
+Traditional tools like Excel are still relevant but not dominant.
+*/
